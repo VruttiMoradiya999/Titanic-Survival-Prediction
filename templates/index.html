@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Titanic AI - Survival Prediction Engine</title>
+  
+  <!-- Modern Typography (Google Fonts) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  
+  <!-- Glassmorphism & Dark Ocean Stylesheet -->
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+
+  <!-- Dynamic Background Animated Ocean Mesh -->
+  <div class="ocean-background-container">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
+    <canvas id="oceanCanvas"></canvas>
+  </div>
+
+  <div class="app-wrapper">
+    
+    <!-- Top Glass Navigation Bar -->
+    <nav class="navbar">
+      <a href="#" class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2L2 19h20L12 2zm0 3.8L18.5 17H5.5L12 5.8z"/>
+          </svg>
+        </div>
+        <span class="brand-text">TITANIC <span style="color:var(--accent-cyan)">AI</span></span>
+        <span class="brand-badge">SVM v1.0</span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#hero">Overview</a></li>
+        <li><a href="#predict">ML Model</a></li>
+        <li><button class="nav-btn-presets" id="openPresetsBtn">⚡ Load Passengers</button></li>
+      </ul>
+    </nav>
+
+    <!-- Main Hero Section -->
+    <main class="hero-section" id="hero">
+      
+      <!-- Left Column: Stylized Titanic Vessel Illustration & ML Visuals -->
+      <div class="hero-visual-container">
+        
+        <div class="hero-header-text">
+          <div class="hero-header-badge">
+            <span class="badge-dot"></span>
+            <span class="badge-text">Interactive Machine Learning Telemetry</span>
+          </div>
+          <h1 class="hero-title">
+            Navigating Fate on the <span class="text-gradient">Atlantic</span>.
+          </h1>
+          <p class="hero-subtitle">
+            An advanced Machine Learning system trained on the 1912 Titanic passenger manifest. Adjust passenger telemetry in real-time to analyze survival probabilities.
+          </p>
+        </div>
+
+        <!-- Stylized Titanic Ship Stage -->
+        <div class="ship-stage" id="shipStage">
+          <div class="ship-wrapper">
+            <!-- SVG Titanic will be injected here via ship-svg.js -->
+          </div>
+
+          <!-- AI Radar Overlay -->
+          <div class="sonar-radar-overlay"></div>
+
+          <!-- Floating Data Points Layer -->
+          <div class="floating-nodes-layer">
+            
+            <div class="data-node-card node-1">
+              <div class="node-icon">💎</div>
+              <div class="node-content">
+                <span class="node-label">CLASS TELEMETRY</span>
+                <span class="node-value">1st Class Suite</span>
+              </div>
+            </div>
+
+            <div class="data-node-card node-2">
+              <div class="node-icon">⚡</div>
+              <div class="node-content">
+                <span class="node-label">MODEL INFERENCE</span>
+                <span class="node-value" id="nodeProbVal" style="color:var(--accent-cyan)">72.8%</span>
+              </div>
+            </div>
+
+            <div class="data-node-card node-3">
+              <div class="node-icon">👤</div>
+              <div class="node-content">
+                <span class="node-label">PASSENGER SEX</span>
+                <span class="node-value">Female (Priority)</span>
+              </div>
+            </div>
+
+            <div class="data-node-card node-4">
+              <div class="node-icon">🎟️</div>
+              <div class="node-content">
+                <span class="node-label">TICKET FARE</span>
+                <span class="node-value">$211.30</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Dark Ocean Glassmorphism Form -->
+      <div class="form-glass-card" id="predict">
+        
+        <div class="form-header">
+          <div class="form-title-group">
+            <h3>Passenger Telemetry</h3>
+            <p>Configure passenger profile for SVM prediction</p>
+          </div>
+          
+          <!-- Live Probability Preview Ring -->
+          <div class="live-prob-preview" title="Real-time estimated probability">
+            <div class="prob-meter-ring" id="probMeterRing">
+              <div class="prob-meter-inner"></div>
+            </div>
+            <span class="prob-val-text" id="probValText">72.8%</span>
+          </div>
+        </div>
+
+        <form class="prediction-form" id="predictionForm">
+          
+          <!-- Row 1: Passenger Class & Sex -->
+          <div class="form-row">
+            
+            <div class="form-group">
+              <label class="form-label">Passenger Class</label>
+              <div class="segmented-control">
+                <button type="button" class="segment-btn pclass-btn active" data-value="1">1st Class</button>
+                <button type="button" class="segment-btn pclass-btn" data-value="2">2nd Class</button>
+                <button type="button" class="segment-btn pclass-btn" data-value="3">3rd Class</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Passenger Sex</label>
+              <div class="segmented-control two-options">
+                <button type="button" class="segment-btn sex-btn active" data-value="female">👩 Female</button>
+                <button type="button" class="segment-btn sex-btn" data-value="male">👨 Male</button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Row 2: Age Slider -->
+          <div class="form-group full-width">
+            <div class="label-container">
+              <label class="form-label" for="ageSlider">Passenger Age</label>
+              <span class="input-badge" id="ageBadge">29 yrs</span>
+            </div>
+            <div class="slider-wrapper">
+              <input type="range" id="ageSlider" class="custom-range-slider" min="1" max="80" value="29">
+            </div>
+          </div>
+
+          <!-- Row 3: Ticket Fare Slider -->
+          <div class="form-group full-width">
+            <div class="label-container">
+              <label class="form-label" for="fareSlider">Ticket Fare (£ / $)</label>
+              <span class="input-badge" id="fareBadge">$150</span>
+            </div>
+            <div class="slider-wrapper">
+              <input type="range" id="fareSlider" class="custom-range-slider" min="0" max="300" step="2" value="150">
+            </div>
+          </div>
+
+          <!-- Row 4: Family Members (SibSp & Parch Steppers) -->
+          <div class="form-row">
+            
+            <div class="form-group">
+              <label class="form-label">Siblings / Spouse</label>
+              <div class="stepper-input">
+                <button type="button" class="stepper-btn" id="sibspMinus">-</button>
+                <span class="stepper-val" id="sibspVal">0</span>
+                <button type="button" class="stepper-btn" id="sibspPlus">+</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Parents / Children</label>
+              <div class="stepper-input">
+                <button type="button" class="stepper-btn" id="parchMinus">-</button>
+                <span class="stepper-val" id="parchVal">0</span>
+                <button type="button" class="stepper-btn" id="parchPlus">+</button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Row 5: Port of Embarkation -->
+          <div class="form-group full-width">
+            <label class="form-label">Embarkation Port</label>
+            <div class="segmented-control">
+              <button type="button" class="segment-btn embarked-btn active" data-value="C">🇫🇷 Cherbourg</button>
+              <button type="button" class="segment-btn embarked-btn" data-value="S">🇬🇧 Southampton</button>
+              <button type="button" class="segment-btn embarked-btn" data-value="Q">🇮🇪 Queenstown</button>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="submit-btn" id="submitBtn">
+            <span>RUN SURVIVAL INFERENCE</span>
+            <svg viewBox="0 0 24 24">
+              <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+
+        </form>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Prediction Result Overlay Modal -->
+  <div class="modal-backdrop" id="resultModal">
+    <div class="modal-card">
+      <button class="modal-close-btn" id="closeModalBtn">&times;</button>
+      
+      <div class="result-status-header">
+        <div class="result-badge-icon survived" id="modalBadgeIcon">🛡️</div>
+        <h2 class="result-title survived" id="modalResultTitle">SURVIVAL LIKELY</h2>
+        <p class="result-subtitle" id="modalResultSubtitle">Passenger telemetry indicates high probability of lifeboat evacuation.</p>
+      </div>
+
+      <!-- Confidence Meter -->
+      <div class="result-meter-container">
+        <div class="meter-header">
+          <span>AI Model Confidence Score</span>
+          <span id="modalMeterVal" style="color:#fff;font-weight:700">72.8%</span>
+        </div>
+        <div class="meter-track">
+          <div class="meter-fill survived" id="modalMeterFill"></div>
+        </div>
+      </div>
+
+      <!-- Feature Impact Breakdown -->
+      <div class="impacts-section">
+        <h4>Key Influencing Factors</h4>
+        <div class="impact-list" id="modalImpactsList">
+          <!-- Dynamic impact items injected here -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Passenger Presets Modal -->
+  <div class="modal-backdrop" id="presetsModal">
+    <div class="modal-card">
+      <button class="modal-close-btn" id="closePresetsBtn">&times;</button>
+      
+      <div class="result-status-header" style="margin-bottom:1.2rem">
+        <h2 class="result-title" style="color:#fff">Historical Passenger Profiles</h2>
+        <p class="result-subtitle">Select a famous passenger to instantly load telemetry into the ML model.</p>
+      </div>
+
+      <div class="presets-grid" id="presetsGrid">
+        <!-- Preset Cards injected via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="/static/js/ocean-canvas.js"></script>
+  <script src="/static/js/ship-svg.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
